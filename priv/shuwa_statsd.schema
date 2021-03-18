@@ -1,0 +1,25 @@
+%% shuwa_statsd config
+
+{mapping, "statsd.prometheus_server", "shuwa_statsd.prometheus_server", [
+  {default, "http://127.0.0.1:9090"},
+  {datatype, string}
+]}.
+
+{mapping, "statsd.push_gateway", "shuwa_statsd.push_gateway", [
+  {default, "http://127.0.0.1:9091"},
+  {datatype, string}
+]}.
+
+{mapping, "statsd.interval", "shuwa_statsd.interval", [
+  {default, 5000},
+  {datatype, integer}
+]}.
+
+{mapping, "statsd.collector.$name", "shuwa_statsd.collectors", [
+  {datatype, atom}
+]}.
+
+{translation, "shuwa_statsd.collectors", fun(Conf) ->
+  Collectors = cuttlefish_variable:filter_by_prefix("statsd.collector", Conf),
+  lists:map(fun({_, Collector}) -> Collector end, Collectors)
+end}.
